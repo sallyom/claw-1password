@@ -1,0 +1,38 @@
+{
+  "id": "1password",
+  "name": "1Password",
+  "description": "1Password SecretRef provider integration",
+  "activation": {
+    "onStartup": false
+  },
+  "enabledByDefault": true,
+  "secretProviderIntegrations": {
+    "onepassword": {
+      "providerAlias": "onepassword",
+      "displayName": "1Password",
+      "description": "Resolve OpenClaw exec SecretRefs from 1Password using the op CLI.",
+      "source": "exec",
+      "command": "${node}",
+      "args": ["./onepassword-secret-ref-resolver.js"],
+      "timeoutMs": 5000,
+      "noOutputTimeoutMs": 5000,
+      "maxOutputBytes": 1048576,
+      "passEnv": [
+        "PATH",
+        "OP_SERVICE_ACCOUNT_TOKEN",
+        "OP_CONNECT_HOST",
+        "OP_CONNECT_TOKEN",
+        "OP_ACCOUNT",
+        "OP_CACHE",
+        "CLAW_1PASSWORD_OP",
+        "CLAW_1PASSWORD_VAULT",
+        "CLAW_1PASSWORD_VALUES_JSON"
+      ]
+    }
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}
