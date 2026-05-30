@@ -13,6 +13,7 @@
     "README.md",
     "openclaw.plugin.json",
     "index.ts",
+    "index.js",
     "onepassword-secret-ref-resolver.js"
   ],
   "scripts": {
