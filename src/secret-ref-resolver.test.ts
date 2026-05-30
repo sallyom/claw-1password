@@ -181,4 +181,28 @@ process.stdout.write("not-a-real-value\\n");
       "op://Engineering/OpenRouter/apiKey",
     ]);
   });
+
+  it("returns an actionable error when the op CLI is missing", async () => {
+    const result = await runResolver({
+      request: {
+        protocolVersion: 1,
+        provider: "onepassword",
+        ids: ["op://Engineering/OpenRouter/apiKey"],
+      },
+      env: {
+        CLAW_1PASSWORD_OP: "/does/not/exist/op",
+      },
+    });
+
+    expect(result).toMatchObject({ code: 0, stderr: "" });
+    expect(JSON.parse(result.stdout)).toEqual({
+      protocolVersion: 1,
+      values: {},
+      errors: {
+        "op://Engineering/OpenRouter/apiKey": {
+          message: '1Password CLI "/does/not/exist/op" is not installed or is not on PATH. Install the official 1Password CLI v2, or set CLAW_1PASSWORD_OP to its absolute path.',
+        },
+      },
+    });
+  });
 });

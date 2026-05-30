@@ -6,6 +6,24 @@ This plugin keeps 1Password-specific resolution outside OpenClaw core. It
 declares a `secretProviderIntegrations.onepassword` preset that materializes an
 OpenClaw-managed Node exec secret provider.
 
+## Prerequisites
+
+Install the official 1Password CLI v2 (`op`) before using this plugin. Most
+local OpenClaw users run OpenClaw on their laptop, so the expected setup is to
+install `op` on the host and make sure it is on `PATH`.
+
+Quick check:
+
+```bash
+op --version
+op account list
+```
+
+For containerized OpenClaw deployments, the runtime image or deployment init
+flow must provide the `op` binary on `PATH`, or set `CLAW_1PASSWORD_OP` to its
+absolute path. Authentication still needs one of the modes supported by `op`,
+such as `OP_SERVICE_ACCOUNT_TOKEN`.
+
 ## 1Password Hosting Model
 
 1Password itself is not generally self-hosted. The self-hostable component is

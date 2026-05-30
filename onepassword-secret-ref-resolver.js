@@ -85,9 +85,14 @@ function resolveOpCommand() {
   return process.env.CLAW_1PASSWORD_OP?.trim() || "op";
 }
 
+function opMissingMessage(command) {
+  return `1Password CLI "${command}" is not installed or is not on PATH. Install the official 1Password CLI v2, or set CLAW_1PASSWORD_OP to its absolute path.`;
+}
+
 function runOpRead(secretReference) {
   return new Promise((resolve, reject) => {
-    const child = spawn(resolveOpCommand(), ["read", secretReference], {
+    const opCommand = resolveOpCommand();
+    const child = spawn(opCommand, ["read", secretReference], {
       env: process.env,
       stdio: ["ignore", "pipe", "pipe"],
     });
@@ -101,7 +106,13 @@ function runOpRead(secretReference) {
     child.stderr.on("data", (chunk) => {
       stderr += chunk;
     });
-    child.on("error", reject);
+    child.on("error", (error) => {
+      if (error && typeof error === "object" && error.code === "ENOENT") {
+        reject(new Error(opMissingMessage(opCommand)));
+        return;
+      }
+      reject(error);
+    });
     child.on("exit", (code) => {
       if (code === 0) {
         resolve(stdout.trimEnd());
